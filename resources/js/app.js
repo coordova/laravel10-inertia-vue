@@ -11,6 +11,11 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    /*resolve: async (name) => {
+        const component = (await import(`./Pages/${name}.vue`)).default;
+        // component.layout ??= Layout;
+        return component;
+    },*/
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)
