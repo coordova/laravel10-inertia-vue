@@ -14,10 +14,18 @@ class BookController extends Controller
      */
     public function index()
     {
-        $data = Book::query()->paginate(100);
+        // return Book::paginate(10);
+
+        // $data = Book::query()->paginate(20);
+
         // dd($data);
         return Inertia::render('books', [
-            'books' => $data
+            'books' => Book::paginate(10)->through(fn($book) => [
+                'id' => $book->id,
+                'title' => $book->title,
+                'author' => $book->author,
+                'image' => $book->image
+            ])
         ]);
     }
 
