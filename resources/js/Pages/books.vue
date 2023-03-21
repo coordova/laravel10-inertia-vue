@@ -6,8 +6,33 @@
                     <h1 class="text-xl font-semibold text-gray-900">Books</h1>
                     <p class="mt-2 text-sm text-gray-700">A list of all the users in your account including their id, title, author and image.</p>
                 </div>
+                <!--Alert-->
+                <div class="rounded-md bg-green-50 p-4" v-if="$page.props.flash.message">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <CheckCircleIcon class="h-5 w-5 text-green-400" aria-hidden="true" />
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-green-800">{{ $page.props.flash.message }}</p>
+                        </div>
+                        <div class="ml-auto pl-3">
+                            <div class="-mx-1.5 -my-1.5">
+                                <button type="button" class="inline-flex rounded-md bg-green-50 p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50">
+                                    <span class="sr-only">Dismiss</span>
+                                    <XMarkIcon class="h-5 w-5" aria-hidden="true" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/-->
                 <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                    <button type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Add book</button>
+                    <button
+                        @click="openForm()"
+                        type="button"
+                        class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
+                        Add book
+                    </button>
                 </div>
             </div>
             <div class="mt-8 flex flex-col">
@@ -34,8 +59,10 @@
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ book.author }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ book.image }}</td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 flex justify-between">
-                                        <Link :href="`/books/${book.id}/edit`" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, {{ book.id }}</span></Link>
-                                        <Link :href="`/books/${book.id}/edit`" class="text-indigo-600 hover:text-indigo-900">Delete<span class="sr-only">, {{ book.id }}</span></Link>
+                                        <!--<Link :href="`/books/${book.id}/edit`" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, {{ book.id }}</span></Link>-->
+                                        <!--<Link :href="`/books/${book.id}/edit`" class="text-indigo-600 hover:text-indigo-900">Delete<span class="sr-only">, {{ book.id }}</span></Link>-->
+                                        <a href="#" @click="openForm(book)" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, {{ book.id }}</span></a>
+                                        <a href="#" @click="deleteItem(book)" class="text-indigo-600 hover:text-indigo-900">Delete<span class="sr-only">, {{ book.id }}</span></a>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -43,6 +70,7 @@
                             <!-- Pagination -->
                             <div class="">
                                 <Pagination :links="books.links.slice(1, -1)" :fromTo="[books.from, books.to, books.total]" :linkPrevNext="[books.prev_page_url, books.next_page_url]"/>
+                                <BookForm :open="isFormOpen" :isOpen="isFormOpen" :isEdit="isFormEdit" :form="formObject" @formsave="saveItem" @formclose="closeModal" />
                             </div>
                         </div>
                     </div>
@@ -99,11 +127,70 @@
 // import AppLayout from "@/Layouts/AppLayout.vue";
 // import Pagination from "@/Components/Pagination_.vue";
 import Pagination from "@/Components/Pagination.vue";
+import BookForm from "@/Components/Book/Form.vue";
+import {ref} from "vue";
+
+import { CheckCircleIcon, XMarkIcon } from '@heroicons/vue/20/solid'
+
+import { router } from '@inertiajs/vue3'
+
+/*---------------*/
+const defaultFormObject = {
+    title: null,
+    author: null,
+    image: null
+}
+/*---------------*/
+const isFormOpen = ref(false);
+const isFormEdit = ref(false);
+const formObject = ref(defaultFormObject);
+/*---------------*/
 
 defineProps({
-    books: Object
+    books: Object,
 });
 
+/*----------------*/
+function saveItem(item) {
+    // console.log(item);
+    let url = '/books';
+    if (item.id) {
+        url = '/books/' + item.id;
+        item._method = 'PUT';
+    }
+    router.post(url, item, {
+        onError: () => {
+
+        },
+        onSuccess: () => {
+            closeModal();
+        }
+    });
+}
+
+function closeModal() {
+    isFormOpen.value = false;
+}
+
+function openForm(item) {
+    // alert('Open modal');
+    console.log('open-form - formOpen: ' + isFormOpen.value);
+    isFormOpen.value = true;
+    isFormEdit.value = !!item; // vemos si existe el parametro item
+    formObject.value = item ? item : defaultFormObject;
+
+    // $page.props.errors = {};
+}
+
+function deleteItem(item) {
+    console.log('delete: ' + item.id);
+    if (window.confirm('Are you sure?')){
+        router.post('/books/' + item.id, {
+            _method: 'DELETE'
+        });
+    }
+}
+/*----------------*/
 /*export default {
     name: "Index.vue"
 }*/
