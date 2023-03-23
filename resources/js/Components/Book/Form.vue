@@ -88,7 +88,7 @@
                                             class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                                             <ExclamationTriangleIcon class="h-6 w-6 text-red-600" aria-hidden="true"/>
                                         </div>
-                                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                        <div class="w-full mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                             <DialogTitle as="h3"
                                                          class="text-base font-semibold leading-6 text-gray-900">
                                                 Bookstore CRUD
@@ -97,29 +97,41 @@
                                                 <!-- CONTENIDO -->
                                                 <div class="">
                                                     <div class="mb-4">
-                                                        <label for="formBookTitle"
+                                                        <div class="relative rounded-md border border-gray-300 px-3 py-2 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+                                                            <label for="title" class="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs font-medium text-gray-900">Title</label>
+                                                            <input v-model="form.title" type="text" name="title" id="title" class="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm" placeholder="Title of the book" />
+                                                        </div>
+                                                        <!--<label for="formBookTitle"
                                                                class="block text-gray-700 text-sm font-bold mb-2">Title: </label>
                                                         <input type="text"
                                                                v-model="form.title"
                                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                                               id="formBookTitle" placeholder="Enter Title">
+                                                               id="formBookTitle" placeholder="Enter Title">-->
                                                         <div v-if="$page.props.errors.title" class="text-red-500">{{ $page.props.errors.title }}</div>
                                                     </div>
                                                     <div class="mb-4">
-                                                        <label for="formBookAuthor"
+                                                        <div class="relative rounded-md border border-gray-300 px-3 py-2 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+                                                            <label for="author" class="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs font-medium text-gray-900">Author</label>
+                                                            <input v-model="form.author" type="text" name="author" id="author" class="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm" placeholder="Author of the book" />
+                                                        </div>
+                                                        <!--<label for="formBookAuthor"
                                                                class="block text-gray-700 text-sm font-bold mb-2">Author:</label>
                                                         <input type="text"
                                                                v-model="form.author"
                                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                                               id="formBookAuthor" placeholder="Enter Author">
+                                                               id="formBookAuthor" placeholder="Enter Author">-->
                                                         <div v-if="$page.props.errors.author" class="text-red-500">{{ $page.props.errors.author }}</div>
                                                     </div>
                                                     <div class="mb-4">
-                                                        <label for="formBookImage"
+                                                        <div class="relative rounded-md border border-gray-300 px-3 py-2 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+                                                            <label for="image" class="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs font-medium text-gray-900">Image</label>
+                                                            <input v-model="form.image" type="text" name="image" id="title" class="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm" placeholder="Image of the book" />
+                                                        </div>
+                                                        <!--<label for="formBookImage"
                                                                class="block text-gray-700 text-sm font-bold mb-2">Image:</label>
                                                         <input type="text"
                                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                                               id="formBookImage" placeholder="Enter Image">
+                                                               id="formBookImage" placeholder="Enter Image">-->
                                                         <div v-if="$page.props.errors.image" class="text-red-500">{{ $page.props.errors.image }}</div>
                                                     </div>
                                                 </div>
