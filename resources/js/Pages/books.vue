@@ -60,7 +60,9 @@
                                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ book.id }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ book.title }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ book.author }}</td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ book.image }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                        <img v-if="book.image" :src="imagePath(book.image)" alt="">
+                                    </td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 flex justify-between">
                                         <!--<Link :href="`/books/${book.id}/edit`" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, {{ book.id }}</span></Link>-->
                                         <!--<Link :href="`/books/${book.id}/edit`" class="text-indigo-600 hover:text-indigo-900">Delete<span class="sr-only">, {{ book.id }}</span></Link>-->
@@ -180,7 +182,8 @@ function openForm(item) {
     console.log('open-form - formOpen: ' + isFormOpen.value);
     isFormOpen.value = true;
     isFormEdit.value = !!item; // vemos si existe el parametro item
-    formObject.value = item ? item : defaultFormObject;
+    // formObject.value = item ? item : defaultFormObject;
+    formObject.value = item ? Object.assign({}, item) : defaultFormObject;
 
     // $page.props.errors = {};
 }
@@ -192,6 +195,10 @@ function deleteItem(item) {
             _method: 'DELETE'
         });
     }
+}
+/*----------------*/
+function imagePath(image) {
+    return '/' + image;
 }
 /*----------------*/
 /*export default {

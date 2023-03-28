@@ -134,6 +134,33 @@
                                                                id="formBookImage" placeholder="Enter Image">-->
                                                         <div v-if="$page.props.errors.image" class="text-red-500">{{ $page.props.errors.image }}</div>
                                                     </div>
+                                                    <div class="mb-4">
+                                                        <div class="relative rounded-md border border-gray-300 px-3 py-2 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+                                                            <label for="image" class="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs font-medium text-gray-900">Image</label>
+                                                            <FilePond
+                                                                name="imageFilepond"
+                                                                ref="pond"
+                                                                v-bind:allow-multiple="false"
+                                                                accepted-file-types="image/png, image/jpeg"
+                                                                v-bind:server="{
+                                                                    url: '',
+                                                                    timeout: 7000,
+                                                                    process: {
+                                                                        url: '/upload-books',
+                                                                        method: 'POST',
+                                                                        headers: {
+                                                                            'X-CSRF-TOKEN': $page.props.csrf_token
+                                                                        },
+                                                                        withCredentials: false,
+                                                                        onload: handleFilePondLoad,
+                                                                        onerror: () => {}
+                                                                    }
+                                                                }"
+                                                                v-bind:file="myFiles"
+                                                                v-on:init="handleFilePondInit"
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -169,9 +196,33 @@ import { ref } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 
+/*------------------------------*/
+// Import Vue FilePond
+import vueFilePond from "vue-filepond";
+
+// Import FilePond styles
+import "filepond/dist/filepond.min.css";
+
+// Import FilePond plugins
+// Please note that you need to install these plugins separately
+
+// Import image preview plugin styles
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
+
+// Import image preview and file type validation plugins
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+/*------------------------------*/
+// Create component
+const FilePond = vueFilePond(
+    FilePondPluginFileValidateType,
+    FilePondPluginImagePreview
+);
+/*------------------------------*/
+
 // let open = ref(false)
 /*------------------------------*/
-defineProps({
+let props = defineProps({
     form: Object,
     isOpen: Boolean,
     isEdit: Boolean,
@@ -180,8 +231,16 @@ defineProps({
         type: Boolean,
         default: false
     },*/
+    myFiles: [],
 });
 /*------------------------------*/
+function handleFilePondInit() {
+
+}
+
+function handleFilePondLoad(response) {
+    props.form.image = response;
+}
 /*export default {
     name: "Form"
 }*/

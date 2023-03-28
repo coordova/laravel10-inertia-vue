@@ -52,6 +52,8 @@ class BookController extends Controller
 
         Book::create($request->all());
 
+        $this->processImage($request);
+
         return redirect()->back()
             ->with('message', 'Book created');
     }
@@ -85,6 +87,8 @@ class BookController extends Controller
 
         $book->update($request->all());
 
+        $this->processImage($request);
+
         return redirect()->back()
             ->with('message', 'Book updated');
     }
@@ -98,5 +102,38 @@ class BookController extends Controller
 
         return redirect()->back()
             ->with('message', 'Book deleted');
+    }
+
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('imageFilepond')) {
+            return $request->file('imageFilepond')->store('uploads/books', 'public');
+        }
+        return '';
+    }
+
+    protected function processImage(Request $request, Book $book)
+    {
+        if ($image = $request->get('image')) {
+            $path = storage_path('storage/app/public/' . $image);
+            // dd($path);
+            if (file_exists($path)) {
+                copy($path, public_path($image));
+                unlink($path);
+            }
+        }
+
+        if ($book) {
+            if (!$request->get('image')) {
+                if ($book->image) {
+                    if (file_exists(public_path($book->image))) {
+                        unlink(public_path($book->image));
+                    }
+                }
+            }
+            $book->update([
+                'image' => $request->get('image')
+            ]);
+        }
     }
 }

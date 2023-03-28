@@ -39,4 +39,6 @@ Route::middleware([
             'index' => 'books'
         ]);
     /*--------------------------------------------*/
+    Route::post('/upload-books', [\App\Http\Controllers\BookController::class, 'upload']);
+    /*--------------------------------------------*/
 });
