@@ -154,9 +154,11 @@
                                                                         withCredentials: false,
                                                                         onload: handleFilePondLoad,
                                                                         onerror: () => {}
-                                                                    }
+                                                                    },
+                                                                    remove: handleFilePondRemove,
+                                                                    revert: handleFilePondRevert,
                                                                 }"
-                                                                v-bind:file="myFiles"
+                                                                v-bind:files="myFiles"
                                                                 v-on:init="handleFilePondInit"
                                                             />
                                                         </div>
@@ -196,6 +198,7 @@ import { ref } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 
+import axios from "axios";
 /*------------------------------*/
 // Import Vue FilePond
 import vueFilePond from "vue-filepond";
@@ -231,16 +234,49 @@ let props = defineProps({
         type: Boolean,
         default: false
     },*/
-    myFiles: [],
-});
-/*------------------------------*/
-function handleFilePondInit() {
 
+});
+
+const myFiles = ref([]);
+/*------------------------------*/
+// si el registro tiene una imagen, hacer un preview en el formulario
+function handleFilePondInit() {
+    if (props.form.image) {
+        // console.log('/storage/' + props.form.image);
+        myFiles.value = [{
+            source: '/storage/' + props.form.image,
+
+            options: {
+                type: 'local',
+                metadata: {
+                    poster: '/storage/' + props.form.image
+                }
+            }
+        }];
+        console.log('files: ' + myFiles.value);
+    } else {
+        console.log('no image');
+        myFiles.value = [];
+    }
 }
 
 function handleFilePondLoad(response) {
     props.form.image = response;
 }
+
+function handleFilePondRemove(source, load, error) {
+    props.form.image = '';
+    load();
+}
+
+function handleFilePondRevert(uniqueId, load, error)
+{
+    axios.post('/upload-books-revert', {
+        image: props.form.image
+    });
+    load();
+}
+
 /*export default {
     name: "Form"
 }*/

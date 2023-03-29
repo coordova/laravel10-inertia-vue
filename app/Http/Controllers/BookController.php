@@ -52,7 +52,7 @@ class BookController extends Controller
 
         Book::create($request->all());
 
-        $this->processImage($request);
+        $this->processImage($request, );
 
         return redirect()->back()
             ->with('message', 'Book created');
@@ -87,7 +87,7 @@ class BookController extends Controller
 
         $book->update($request->all());
 
-        $this->processImage($request);
+        $this->processImage($request, $book);
 
         return redirect()->back()
             ->with('message', 'Book updated');
@@ -112,14 +112,26 @@ class BookController extends Controller
         return '';
     }
 
-    protected function processImage(Request $request, Book $book)
+    public function uploadRevert(Request $request)
     {
         if ($image = $request->get('image')) {
-            $path = storage_path('storage/app/public/' . $image);
+            $path = storage_path('app/public/' . $image);
+            if(file_exists($path)){
+                unlink($path);
+            }
+        }
+        return '';
+    }
+
+    protected function processImage(Request $request, Book $book = null)
+    {
+        if ($image = $request->get('image')) {
+            $path = storage_path('app/public/' . $image);
+            // dd($image, storage_path(), $path, public_path(), public_path($image));
             // dd($path);
             if (file_exists($path)) {
-                copy($path, public_path($image));
-                unlink($path);
+                copy($path, public_path('storage/' . $image));
+                // unlink($path);
             }
         }
 

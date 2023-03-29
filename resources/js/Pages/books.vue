@@ -61,7 +61,7 @@
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ book.title }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ book.author }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                        <img v-if="book.image" :src="imagePath(book.image)" alt="">
+                                        <img v-if="book.image" :src="imagePath(book.image)" alt="" class="w-24">
                                     </td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 flex justify-between">
                                         <!--<Link :href="`/books/${book.id}/edit`" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, {{ book.id }}</span></Link>-->
@@ -198,7 +198,8 @@ function deleteItem(item) {
 }
 /*----------------*/
 function imagePath(image) {
-    return '/' + image;
+    // console.log('/storage/' + image);
+    return '/storage/' + image;
 }
 /*----------------*/
 /*export default {

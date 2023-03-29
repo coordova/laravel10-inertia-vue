@@ -40,5 +40,6 @@ Route::middleware([
         ]);
     /*--------------------------------------------*/
     Route::post('/upload-books', [\App\Http\Controllers\BookController::class, 'upload']);
+    Route::post('/upload-books-revert', [\App\Http\Controllers\BookController::class, 'uploadRevert']);
     /*--------------------------------------------*/
 });
